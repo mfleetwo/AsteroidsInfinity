@@ -1,9 +1,22 @@
 #! /usr/bin/env python
 # The above line makes this executible in unix systems
 
-# Asteroids Infinity v1.1.1
-# Copyright 2008 Ben Whittaker
-# Inspired by the classic Atari arcade game "Asteriods"
+#    Asteroids Infinity
+#    Inspired by the classic Atari arcade game "Asteroids"
+#    Copyright (C) 2009  Ben Whittaker
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pygame
 import random
@@ -51,6 +64,7 @@ def loadsounds():
     saucer_sound = Sound("sounds/saucer.wav")
     if pygame.mixer.get_init() <> None:
         pygame.mixer.set_reserved(2) # reserves channels for the thrust sound and the saucer sound
+        pygame.mixer.Channel(1).set_volume(0.5)
 
 def set_volume(volume):
     explosion_sound.set_volume(volume)
@@ -420,6 +434,7 @@ class Saucer(Obj):
         #else:
             #print 0
     def update(self):
+        global viewpoint
         if self.radius < self.real_radius:
             self.radius *= 7**(1 / fps)
             self.make_image_points(self.radius)
@@ -429,28 +444,38 @@ class Saucer(Obj):
             self.add(Objects)
             self.add(Collidable)
         if random.random() > 0.35**(1/fps):
-##            average_speed = [0, 0]
-##            num = 0
-##            for obj in Collidable.sprites():
-##                average_speed[0] += obj.speed[0]
-##                average_speed[1] += obj.speed[1]
-##                num += 1
-##            if ShipGroup.sprite <> None:
-##                average_speed[0] += ShipGroup.sprite.speed[0]
-##                average_speed[1] += ShipGroup.sprite.speed[1]
-##                num += 1
-##            if num <> 0:
-##                average_speed[0] /= num
-##                average_speed[1] /= num
-##            self.speed = average_speed
-            if ShipGroup.sprite <> None:
-                self.speed = list(ShipGroup.sprite.speed)
-            #self.speed[0] = (self.speed[0] * 49 + average_speed[0]) / 50
-            #self.speed[1] = (self.speed[1] * 49 + average_speed[1]) / 50
+            self.speed = list(viewpointspeed)
             angle = random.uniform(0, math.pi * 2)
             speed = random.randint(40, 160)
             self.speed[0] += math.sin(angle) * speed
             self.speed[1] += math.cos(angle) * speed
+            # The following commented out chunk off code was an attempt to make saucers avoid asteroids. It didn't work.
+##            for a in range(10):
+##                self.speed = list(viewpointspeed)
+##                angle = random.uniform(0, math.pi * 2)
+##                speed = random.randint(40, 160)
+##                self.speed[0] += math.sin(angle) * speed
+##                self.speed[1] += math.cos(angle) * speed
+##                danger = 0
+##                for asteroid in Asteroids.sprites():
+##                    rel_speed = (asteroid.speed[0] - self.speed[0], asteroid.speed[1] - self.speed[1])
+##                    rel_pos = (wrap(asteroid.pos[0] - self.pos[0], -playarea[0]/2, playarea[0]/2), wrap(asteroid.pos[1] - self.pos[1], -playarea[1]/2, playarea[1]/2))
+##                    rel_angle = math.atan2(rel_pos[0], rel_pos[1]) - 180
+##                    clearance = math.atan2(asteroid.radius + self.radius, math.hypot(rel_pos[0], rel_pos[1]))
+##                    #print clearance
+##                    ras = math.atan2(rel_speed[0], rel_speed[1])
+##                    #print ras
+##                    #angle = rel_angle
+##                    #speed = 200
+##                    #Stick(self.pos, (self.speed[0] + math.sin(angle) * speed, self.speed[1] + math.cos(angle) * speed), 5)
+##                    if wrap(rel_angle - clearance, ras - math.pi, ras + math.pi) < ras < wrap(rel_angle + clearance, ras - math.pi, ras + math.pi):
+##                        danger = 1
+##                        #print "not there"
+##                        if a == 9:
+##                            print "Aaaaaaaa!!!!!"
+##                            break
+##                if danger == 0:
+##                    break
         Obj.update(self)
     def collide(self, victim):
         if victim not in self.bullets.sprites():
@@ -460,8 +485,6 @@ class Saucer(Obj):
                 speed = random.uniform(0, 200)
                 Stick(self.pos, (self.speed[0] + math.sin(angle) * speed, self.speed[1] + math.cos(angle) * speed), self.radius / 2)
             self.kill()
-            if Saucers.sprites() == []:
-                Channel(1).stop()
     def make_image_points(self, r):
         self.image_points = [[
                 (math.pi / 2, r * 4 / 3),
@@ -479,6 +502,10 @@ class Saucer(Obj):
                 (-math.pi * 3 / 4, r * 3 / 4),
                 (-math.pi * 11 / 12, r)
             ]]
+    def kill(self):
+        pygame.sprite.Sprite.kill(self)
+        if Saucers.sprites() == []:
+            Channel(1).stop()
 
 class BigSaucer(Saucer):
     def __init__(self, pos):
@@ -499,8 +526,12 @@ class SmallSaucer(Saucer):
         Saucer.__init__(self, pos, 10)
     def update(self):
         Saucer.update(self)
-        if random.random() > 0.6**(1/fps) and Objects in self.groups() and ShipGroup.sprite <> None:
-            angle = math.atan2(ShipGroup.sprite.pos_screen[0] - self.pos_screen[0], ShipGroup.sprite.pos_screen[1] - self.pos_screen[1]) + random.uniform(math.pi / -4, math.pi / 4)
+        if ShipGroup.sprite <> None:
+            target = ShipGroup.sprite
+        elif Asteroids.sprites() <> []:
+            target = Asteroids.sprites()[0]
+        if random.random() > 0.6**(1/fps) and Objects in self.groups():
+            angle = math.atan2(target.pos_screen[0] - self.pos_screen[0], target.pos_screen[1] - self.pos_screen[1]) + random.uniform(math.pi / -4, math.pi / 4)
             speed = (self.speed[0] + math.sin(angle) * 400, self.speed[1] + math.cos(angle) * 400)
             Bullet([self.pos[0], self.pos[1]], speed, angle, 4, creator = self, groups = [self.bullets])
     def collide(self, victim):
@@ -568,6 +599,7 @@ def raise_score(amount, attacker = None):
 
 def main():
     global viewpoint
+    global viewpointspeed
     global score
     global fps
     font = pygame.font.Font("font/Vectorb.ttf", 20)
@@ -597,10 +629,12 @@ def main():
     running = 1
     for a in range(random.randrange(1, 10)):
         Asteroid((random.randint(0, playarea[0]), random.randint(0, playarea[1])), (random.randint(-100, 100), random.randint(-100, 100)), random.randint(1, 3))
+    lastbeat = pygame.time.get_ticks()
+    beattype = 1
     mode = "menustart"
     olddirtyrects = []
     while running == 1:
-        fps = 1000.0 / clock.tick()
+        fps = 1000.0 / clock.tick(100)
         if fps_counter == 1:
             fps_text.change("FPS : " + str(clock.get_fps()))
         keys = pygame.key.get_pressed()
@@ -641,6 +675,7 @@ def main():
                         if event.type == pygame.QUIT:
                             running = 0
                             break
+                    clock.tick()
                 if mode == "menu" or mode == "options" or mode == "controls":
                     if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                         menu_items[selected].change(menu_items[selected].text[1:-1])
@@ -671,6 +706,7 @@ def main():
                             mode = "optionsstart"
                         elif selected == 3:
                             running = 0
+                        title_text.kill()
                 if mode == "options":
                     if event.key == pygame.K_RETURN:
                         if selected == 0:
@@ -773,19 +809,23 @@ def main():
         #pygame.event.pump()
         a = 0
         if Asteroids.sprites() == []:
-            level += 1
-            for obj in Objects.sprites():
-                obj.speed[0] -= viewpointspeed[0]
-                obj.speed[1] -= viewpointspeed[1]
-            for a in range(level):
-                Asteroid([random.randint(0, playarea[0]), random.randint(0, playarea[1])], (random.randint(-100, 100), random.randint(-100, 100)), 3)
-            #level_text = font.render("Level " + str(level), 1, (255, 255, 255))
-            level_text.change("Level " + str(level))
-            if ShipGroup.sprite <> None:
-                ShipGroup.sprite.activate_shield(2)
-                ShipGroup.sprite.speed[0] -= viewpointspeed[0]
-                ShipGroup.sprite.speed[1] -= viewpointspeed[1]
+            if mode == "play":
+                level += 1
+                for obj in Objects.sprites():
+                    obj.speed[0] -= viewpointspeed[0]
+                    obj.speed[1] -= viewpointspeed[1]
+                for a in range(level):
+                    Asteroid([random.randint(0, playarea[0]), random.randint(0, playarea[1])], (random.randint(-100, 100), random.randint(-100, 100)), 3)
+                #level_text = font.render("Level " + str(level), 1, (255, 255, 255))
+                level_text.change("Level " + str(level))
+                if ShipGroup.sprite <> None:
+                    ShipGroup.sprite.activate_shield(2)
+                    viewpointspeed = [0, 0]
+            else:
+                for a in range(random.randrange(1, 10)):
+                    Asteroid((random.randint(0, playarea[0]), random.randint(0, playarea[1])), (random.randint(-100, 100), random.randint(-100, 100)), random.randint(1, 3))
                 viewpointspeed = [0, 0]
+                    
         while a < len(Collidable.sprites()):
             obj1 = Collidable.sprites()[a]
             pos1 = list(obj1.pos)
@@ -806,11 +846,12 @@ def main():
                     break
             a += 1
         if mode == "menustart":
+            title_text = Text("ASTEROIDS INFINITY", large_font, (screensize[0] / 2, screensize[1] / 2 - 180), align = "center")
             menu_items = (
-                Text("<PLAY>", large_font, (screensize[0] / 2, screensize[1] / 2 - 140), align = "center"),
-                Text("HIGHSCORES", large_font, (screensize[0] / 2, screensize[1] / 2 - 60), align = "center"),
-                Text("OPTIONS", large_font, (screensize[0] / 2, screensize[1] / 2 + 20), align = "center"),
-                Text("QUIT", large_font, (screensize[0] / 2, screensize[1] / 2 + 100), align = "center")
+                Text("<PLAY>", large_font, (screensize[0] / 2, screensize[1] / 2 - 80), align = "center"),
+                Text("HIGHSCORES", large_font, (screensize[0] / 2, screensize[1] / 2), align = "center"),
+                Text("OPTIONS", large_font, (screensize[0] / 2, screensize[1] / 2 + 80), align = "center"),
+                Text("QUIT", large_font, (screensize[0] / 2, screensize[1] / 2 + 160), align = "center")
                 )
             selected = 0
             mode = "menu"
@@ -887,8 +928,6 @@ def main():
                 lives_text.change("Lives : " + str(lives))
                 level = 0
                 next_life = 10000
-                lastbeat = pygame.time.get_ticks()
-                beattype = 1
                 mode = "play"
         if mode == "play":
             if score >= next_life:
@@ -928,14 +967,12 @@ def main():
                 respawn_time = 2
             else:
                 respawn_time -= 1.0 / fps
-            if pygame.time.get_ticks() >= lastbeat + 10000 / (len(Asteroids.sprites()) + 10):
-                lastbeat = pygame.time.get_ticks()
-                if beattype == 1:
-                    beat1_sound.play()
-                    beattype = 2
+        else:
+            if random.random() > 0.98**(1/fps):
+                if random.randint(1, 3) == 1:
+                    SmallSaucer((random.randint(0, screensize[0]), random.randint(0, screensize[1])))
                 else:
-                    beat2_sound.play()
-                    beattype = 1
+                    BigSaucer((random.randint(0, screensize[0]), random.randint(0, screensize[1])))
         if mode == "gameoverstart":
             if ShipGroup.sprite <> None:
                 ShipGroup.sprite.kill()
@@ -944,6 +981,14 @@ def main():
                 Text("Press any key to continue", font, (screensize[0] / 2, screensize[1] / 2 + 10), align = "center")
                 )
             mode = "gameover"
+        if pygame.time.get_ticks() >= lastbeat + 10000 / (len(Asteroids.sprites()) + 10):
+            lastbeat = pygame.time.get_ticks()
+            if beattype == 1:
+                beat1_sound.play()
+                beattype = 2
+            else:
+                beat2_sound.play()
+                beattype = 1
         viewpoint[0] += viewpointspeed[0] / fps
         viewpoint[1] += viewpointspeed[1] / fps
         Objects.update()
