@@ -62,7 +62,7 @@ def loadsounds():
     beat2_sound = Sound("sounds/beat2.wav")
     life_sound = Sound("sounds/life.wav")
     saucer_sound = Sound("sounds/saucer.wav")
-    if pygame.mixer.get_init() <> None:
+    if pygame.mixer.get_init() != None:
         pygame.mixer.set_reserved(2) # reserves channels for the thrust sound and the saucer sound
         pygame.mixer.Channel(1).set_volume(0.5)
 
@@ -526,9 +526,9 @@ class SmallSaucer(Saucer):
         Saucer.__init__(self, pos, 10)
     def update(self):
         Saucer.update(self)
-        if ShipGroup.sprite <> None:
+        if ShipGroup.sprite != None:
             target = ShipGroup.sprite
-        elif Asteroids.sprites() <> []:
+        elif Asteroids.sprites() != []:
             target = Asteroids.sprites()[0]
         if random.random() > 0.6**(1/fps) and Objects in self.groups():
             angle = math.atan2(target.pos_screen[0] - self.pos_screen[0], target.pos_screen[1] - self.pos_screen[1]) + random.uniform(math.pi / -4, math.pi / 4)
@@ -583,7 +583,7 @@ class Bullet(Obj):
             self.kill()
         Obj.update(self)
     def collide(self, victim):
-        if victim <> self.creator:
+        if victim != self.creator:
             if not (Bullets in victim.groups() and victim.creator == self.creator):
                 explosion(self.pos, [(self.speed[a] + victim.speed[a]) / 2 for a in range(2)], 25, 100)
                 self.kill()
@@ -655,7 +655,7 @@ def main():
                         for text in controls_text + menu_items:
                             text.kill()
                         mode = "optionsstart"
-                    elif mode <> "gameover":
+                    elif mode != "gameover":
                         for text in menu_items:
                             text.kill()
                         if mode == "sethighscore":
@@ -818,7 +818,7 @@ def main():
                     Asteroid([random.randint(0, playarea[0]), random.randint(0, playarea[1])], (random.randint(-100, 100), random.randint(-100, 100)), 3)
                 #level_text = font.render("Level " + str(level), 1, (255, 255, 255))
                 level_text.change("Level " + str(level))
-                if ShipGroup.sprite <> None:
+                if ShipGroup.sprite != None:
                     ShipGroup.sprite.activate_shield(2)
                     viewpointspeed = [0, 0]
             else:
@@ -935,7 +935,7 @@ def main():
                 lives_text.change("Lives : " + str(lives))
                 life_sound.play()
                 next_life += 10000
-            if ShipGroup.sprite <> None:
+            if ShipGroup.sprite != None:
                 ship = ShipGroup.sprite
                 ship.control(keys)
                 #viewpoint[0] = ship.pos[0] - screensize[0] / 2 + ship.speed[0] / fps
@@ -974,7 +974,7 @@ def main():
                 else:
                     BigSaucer((random.randint(0, screensize[0]), random.randint(0, screensize[1])))
         if mode == "gameoverstart":
-            if ShipGroup.sprite <> None:
+            if ShipGroup.sprite != None:
                 ShipGroup.sprite.kill()
             gameover_text = (
                 Text("GAME OVER", large_font, (screensize[0] / 2, screensize[1] / 2 - 40), align = "center"),
