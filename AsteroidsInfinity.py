@@ -92,8 +92,8 @@ def get_highscores():
                 highscores += [(0,"")]
             return highscores
         except:
-            print "Could not open highscores and/or could not parse highscores."
-            print "Using default highscores."
+            print("Could not open highscores and/or could not parse highscores.")
+            print("Using default highscores.")
     highscores = [
         (8128, "PERFECT"),
         (6173, "PRIME"),
@@ -429,10 +429,10 @@ class Saucer(Obj):
         self.speed[1] += math.cos(angle) * speed
         self.bullets = pygame.sprite.Group()
         if Saucers.sprites() == [self]:
-            #print 1
+            #print(1)
             Channel(1).play(saucer_sound, -1)
         #else:
-            #print 0
+            #print(0)
     def update(self):
         global viewpoint
         if self.radius < self.real_radius:
@@ -462,17 +462,17 @@ class Saucer(Obj):
 ##                    rel_pos = (wrap(asteroid.pos[0] - self.pos[0], -playarea[0]/2, playarea[0]/2), wrap(asteroid.pos[1] - self.pos[1], -playarea[1]/2, playarea[1]/2))
 ##                    rel_angle = math.atan2(rel_pos[0], rel_pos[1]) - 180
 ##                    clearance = math.atan2(asteroid.radius + self.radius, math.hypot(rel_pos[0], rel_pos[1]))
-##                    #print clearance
+##                    #print(clearance)
 ##                    ras = math.atan2(rel_speed[0], rel_speed[1])
-##                    #print ras
+##                    #print(ras)
 ##                    #angle = rel_angle
 ##                    #speed = 200
 ##                    #Stick(self.pos, (self.speed[0] + math.sin(angle) * speed, self.speed[1] + math.cos(angle) * speed), 5)
 ##                    if wrap(rel_angle - clearance, ras - math.pi, ras + math.pi) < ras < wrap(rel_angle + clearance, ras - math.pi, ras + math.pi):
 ##                        danger = 1
-##                        #print "not there"
+##                        #print("not there")
 ##                        if a == 9:
-##                            print "Aaaaaaaa!!!!!"
+##                            print("Aaaaaaaa!!!!!")
 ##                            break
 ##                if danger == 0:
 ##                    break
@@ -645,7 +645,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = 0
             elif event.type == pygame.KEYDOWN:
-                #print event.unicode
+                #print(event.unicode)
                 if event.key == pygame.K_ESCAPE:
                     if mode == "play":
                         mode = "gameoverstart"
