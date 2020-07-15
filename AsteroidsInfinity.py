@@ -271,7 +271,8 @@ class Obj(pygame.sprite.Sprite):
                 points_list = points_list[1:]
             temp_points = []
             for point in points_list:
-                temp_points.append((math.sin(point[0] + self.angle) * point[1] + render_pos[0], math.cos(point[0] + self.angle) * point[1] + render_pos[1]))
+                temp_points.append((int(math.sin(point[0] + self.angle) * point[1] + render_pos[0]),
+                                    int(math.cos(point[0] + self.angle) * point[1] + render_pos[1])))
             pygame.draw.polygon(surface, backcolor, temp_points)
             dirtyrects.append(pygame.draw.aalines(surface, color, 1, temp_points).inflate(2, 2))
             #pygame.draw.circle(surface, (100, 100, 100), render_pos, self.radius, 1)
