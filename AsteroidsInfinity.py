@@ -663,8 +663,8 @@ def main():
                             name_text.kill()
                         mode = "menustart"
                 if event.key == pygame.K_p and mode == "play": # Pause
-                    pause_text1 = Text("PAUSED", large_font, (screensize[0] / 2, screensize[1] / 2 - 65), align = "center")
-                    pause_text2 = Text("Press any key to continue", font, (screensize[0] / 2, screensize[1] / 2 + 20), align = "center")
+                    pause_text1 = Text("PAUSED", large_font, (screensize[0] // 2, screensize[1] // 2 - 65), align = "center")
+                    pause_text2 = Text("Press any key to continue", font, (screensize[0] // 2, screensize[1] // 2 + 20), align = "center")
                     TextGroup.draw(screen)
                     pygame.display.flip()
                     while 1:
@@ -867,53 +867,53 @@ def main():
             else:
                 item2 = "FPS COUNTER OFF"
             menu_items = (
-                Text(item0, large_font, (screensize[0] / 2, screensize[1] / 2 - 180), align = "center"),
-                Text(item1, large_font, (screensize[0] / 2, screensize[1] / 2 - 100), align = "center"),
-                Text(item2, large_font, (screensize[0] / 2, screensize[1] / 2 - 20), align = "center"),
-                Text("CONTROLS", large_font, (screensize[0] / 2, screensize[1] / 2 + 60), align = "center"),
-                Text("BACK", large_font, (screensize[0] / 2, screensize[1] / 2 + 140), align = "center")
+                Text(item0, large_font, (screensize[0] // 2, screensize[1] // 2 - 180), align = "center"),
+                Text(item1, large_font, (screensize[0] // 2, screensize[1] // 2 - 100), align = "center"),
+                Text(item2, large_font, (screensize[0] // 2, screensize[1] // 2 - 20), align = "center"),
+                Text("CONTROLS", large_font, (screensize[0] // 2, screensize[1] // 2 + 60), align = "center"),
+                Text("BACK", large_font, (screensize[0] // 2, screensize[1] // 2 + 140), align = "center")
                 )
             selected = 0
             mode = "options"
         if mode == "controlsstart":
             controls_text = (
-                Text("UP: ", font, (screensize[0] / 2, screensize[1] / 2 - 140), align = "right"),
-                Text("DOWN: ", font, (screensize[0] / 2, screensize[1] / 2 - 100), align = "right"),
-                Text("LEFT: ", font, (screensize[0] / 2, screensize[1] / 2 - 60), align = "right"),
-                Text("RIGHT: ", font, (screensize[0] / 2, screensize[1] / 2 - 20), align = "right"),
-                Text("SHOOT: ", font, (screensize[0] / 2, screensize[1] / 2 + 20), align = "right"),
-                Text("SHIELD: ", font, (screensize[0] / 2, screensize[1] / 2 + 60), align = "right")
+                Text("UP: ", font, (screensize[0] // 2, screensize[1] // 2 - 140), align = "right"),
+                Text("DOWN: ", font, (screensize[0] // 2, screensize[1] // 2 - 100), align = "right"),
+                Text("LEFT: ", font, (screensize[0] // 2, screensize[1] // 2 - 60), align = "right"),
+                Text("RIGHT: ", font, (screensize[0] // 2, screensize[1] // 2 - 20), align = "right"),
+                Text("SHOOT: ", font, (screensize[0] // 2, screensize[1] // 2 + 20), align = "right"),
+                Text("SHIELD: ", font, (screensize[0] // 2, screensize[1] // 2 + 60), align = "right")
                 )
             menu_items = (
-                Text("<" + pygame.key.name(controls["up"]) + ">", font, (screensize[0] / 2, screensize[1] / 2 - 140), align = "left"),
-                Text(pygame.key.name(controls["down"]), font, (screensize[0] / 2, screensize[1] / 2 - 100), align = "left"),
-                Text(pygame.key.name(controls["left"]), font, (screensize[0] / 2, screensize[1] / 2 - 60), align = "left"),
-                Text(pygame.key.name(controls["right"]), font, (screensize[0] / 2, screensize[1] / 2 - 20), align = "left"),
-                Text(pygame.key.name(controls["shoot"]), font, (screensize[0] / 2, screensize[1] / 2 + 20), align = "left"),
-                Text(pygame.key.name(controls["shield"]), font, (screensize[0] / 2, screensize[1] / 2 + 60), align = "left"),
-                Text("BACK", large_font, (screensize[0] / 2, screensize[1] / 2 + 100), align = "center")
+                Text("<" + pygame.key.name(controls["up"]) + ">", font, (screensize[0] // 2, screensize[1] // 2 - 140), align = "left"),
+                Text(pygame.key.name(controls["down"]), font, (screensize[0] // 2, screensize[1] // 2 - 100), align = "left"),
+                Text(pygame.key.name(controls["left"]), font, (screensize[0] // 2, screensize[1] // 2 - 60), align = "left"),
+                Text(pygame.key.name(controls["right"]), font, (screensize[0] // 2, screensize[1] // 2 - 20), align = "left"),
+                Text(pygame.key.name(controls["shoot"]), font, (screensize[0] // 2, screensize[1] // 2 + 20), align = "left"),
+                Text(pygame.key.name(controls["shield"]), font, (screensize[0] // 2, screensize[1] // 2 + 60), align = "left"),
+                Text("BACK", large_font, (screensize[0] // 2, screensize[1] // 2 + 100), align = "center")
                 )
             selected = 0
             setting_key = 0
             mode = "controls"
         if mode == "highscoresstart":
-            menu_items = [Text("HIGHSCORES", large_font, (screensize[0] / 2, 40), align = "center")]
+            menu_items = [Text("HIGHSCORES", large_font, (screensize[0] // 2, 40), align = "center")]
             a = -130
             n = 1
             for highscore in highscores:
-                menu_items.append(Text(str(n) + ". ", font, (200, screensize[1] / 2 + a), align = "right"))
-                menu_items.append(Text(highscore[1], font, (200, screensize[1] / 2 + a), align = "left"))
-                menu_items.append(Text(str(highscore[0]), font, (screensize[0] - 150, screensize[1] / 2 + a), align = "right"))
+                menu_items.append(Text(str(n) + ". ", font, (200, screensize[1] // 2 + a), align = "right"))
+                menu_items.append(Text(highscore[1], font, (200, screensize[1] // 2 + a), align = "left"))
+                menu_items.append(Text(str(highscore[0]), font, (screensize[0] - 150, screensize[1] // 2 + a), align = "right"))
                 a += 30
                 n += 1
-            menu_items.append(Text("PRESS ANY KEY TO CONTINUE", font, (screensize[0] / 2, screensize[1] - 60), align = "center"))
+            menu_items.append(Text("PRESS ANY KEY TO CONTINUE", font, (screensize[0] // 2, screensize[1] - 60), align = "center"))
             mode = "highscores"
         if mode == "highscorecheck":
             if score > highscores[-1][0]:
                 menu_items = []
-                menu_items.append(Text("YOU SET A NEW HIGHSCORE WITH " + str(score) + " POINTS", font, (screensize[0] / 2, screensize[1] / 2 - 40), align = "center"))
-                menu_items.append(Text("PLEASE ENTER YOUR NAME", font, (screensize[0] / 2, screensize[1] / 2), align = "center"))
-                name_text = Text("_", font, (screensize[0] / 2, screensize[1] / 2 + 40), align = "center")
+                menu_items.append(Text("YOU SET A NEW HIGHSCORE WITH " + str(score) + " POINTS", font, (screensize[0] // 2, screensize[1] // 2 - 40), align = "center"))
+                menu_items.append(Text("PLEASE ENTER YOUR NAME", font, (screensize[0] // 2, screensize[1] // 2), align = "center"))
+                name_text = Text("_", font, (screensize[0] // 2, screensize[1] // 2 + 40), align = "center")
                 name = ""
                 mode = "sethighscore"
             else:
@@ -978,8 +978,8 @@ def main():
             if ShipGroup.sprite != None:
                 ShipGroup.sprite.kill()
             gameover_text = (
-                Text("GAME OVER", large_font, (screensize[0] / 2, screensize[1] / 2 - 40), align = "center"),
-                Text("Press any key to continue", font, (screensize[0] / 2, screensize[1] / 2 + 10), align = "center")
+                Text("GAME OVER", large_font, (screensize[0] // 2, screensize[1] // 2 - 40), align = "center"),
+                Text("Press any key to continue", font, (screensize[0] // 2, screensize[1] // 2 + 10), align = "center")
                 )
             mode = "gameover"
         if pygame.time.get_ticks() >= lastbeat + 10000 / (len(Asteroids.sprites()) + 10):
