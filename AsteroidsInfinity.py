@@ -194,7 +194,7 @@ class Text(pygame.sprite.Sprite): # A class of objects for displaying text
         if self.align == "left":
             self.rect = pygame.Rect(self.pos[0], self.pos[1], width, height)
         elif self.align == "center":
-            self.rect = pygame.Rect(self.pos[0] - width / 2, self.pos[1], width, height)
+            self.rect = pygame.Rect(self.pos[0] - width // 2, self.pos[1], width, height)
         else:
             self.rect = pygame.Rect(self.pos[0] - width, self.pos[1], width, height)
 
@@ -622,7 +622,7 @@ def main():
     lives = 0
     #lives_text = font.render("Lives : " + str(lives), 1, (255, 255, 255))
     lives_text = Text("Lives : " + str(lives), font, (5, 5))
-    level_text = Text("Level N/A", font, (screensize[0] / 2, 5), align = "center")
+    level_text = Text("Level N/A", font, (screensize[0] // 2, 5), align = "center")
     score_text = Text("", font, (screensize[0] - 5, 5), align = "right")
     fps_counter = 0
     respawn_time = 2
@@ -846,12 +846,12 @@ def main():
                     break
             a += 1
         if mode == "menustart":
-            title_text = Text("ASTEROIDS INFINITY", large_font, (screensize[0] / 2, screensize[1] / 2 - 180), align = "center")
+            title_text = Text("ASTEROIDS INFINITY", large_font, (screensize[0] // 2, screensize[1] // 2 - 180), align = "center")
             menu_items = (
-                Text("<PLAY>", large_font, (screensize[0] / 2, screensize[1] / 2 - 80), align = "center"),
-                Text("HIGHSCORES", large_font, (screensize[0] / 2, screensize[1] / 2), align = "center"),
-                Text("OPTIONS", large_font, (screensize[0] / 2, screensize[1] / 2 + 80), align = "center"),
-                Text("QUIT", large_font, (screensize[0] / 2, screensize[1] / 2 + 160), align = "center")
+                Text("<PLAY>", large_font, (screensize[0] // 2, screensize[1] // 2 - 80), align = "center"),
+                Text("HIGHSCORES", large_font, (screensize[0] // 2, screensize[1] // 2), align = "center"),
+                Text("OPTIONS", large_font, (screensize[0] // 2, screensize[1] // 2 + 80), align = "center"),
+                Text("QUIT", large_font, (screensize[0] // 2, screensize[1] // 2 + 160), align = "center")
                 )
             selected = 0
             mode = "menu"
